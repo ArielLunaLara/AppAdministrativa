@@ -1,0 +1,53 @@
+﻿<Window x:Class="AppAdministrativa.AgregarVideo360Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Videos 360" Height="320" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F0F4F8">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="#3F5C8C">
+            <TextBlock Text="Aplicación Administrativa" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="#678EC2">
+            <TextBlock Text="Editar Ruta de Video 360" Foreground="#1A2530" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Margin="30,20,30,30">
+
+            <TextBlock Text="ID Salón" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#D8E3F2" CornerRadius="6" Height="35" Margin="0,0,0,20">
+                <!-- Solo lectura: el salón no cambia, solo su ruta -->
+                <TextBox x:Name="txtIDSalon" Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0" IsReadOnly="True"
+                         Foreground="#555" FontStyle="Italic"/>
+            </Border>
+
+            <TextBlock Text="Ruta Video 360" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,30">
+                <TextBox x:Name="txtRutaVideo" Text="Seleccionar video..." GotFocus="SeleccionarArchivo_GotFocus"
+                         IsReadOnly="True" Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0" Cursor="Hand"/>
+            </Border>
+
+            <Button Click="BtnGuardar_Click" Width="150" Height="40" BorderThickness="0"
+                    Foreground="White" FontWeight="SemiBold" HorizontalAlignment="Center">
+                <Button.Background>
+                    <SolidColorBrush Color="#678EC2"/>
+                </Button.Background>
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </Button.Resources>
+                <TextBlock Text="Guardar Cambios"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

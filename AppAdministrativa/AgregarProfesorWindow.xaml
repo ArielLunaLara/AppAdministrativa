@@ -1,0 +1,97 @@
+﻿<Window x:Class="AppAdministrativa.AgregarProfesorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Agregar Profesor" Height="800" Width="450" 
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F0F4F8">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions><Grid Grid.Row="0" Background="#3F5C8C">
+    <TextBlock Text="Aplicación Administrativa" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="20,0,0,0"/>
+    
+</Grid>
+
+        <Grid Grid.Row="0" Background="#3F5C8C">
+            <TextBlock Text="Aplicación Administrativa" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="#678EC2">
+            <TextBlock x:Name="TxtTituloVentana" Text="Agregar Registro a Profesores" Foreground="#1A2530" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+            <StackPanel Margin="30,20,30,30">
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Text="Clave" FontSize="11" Foreground="#1A2530"/>
+                    <TextBlock Text="*" Foreground="Red" FontSize="11" Margin="3,0,0,0"/>
+                </StackPanel>
+                <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="100" HorizontalAlignment="Left" Margin="0,0,0,15">
+                    <TextBox x:Name="txtClave" Text="#000" Foreground="Gray" 
+                             GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                             Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+                </Border>
+
+                <TextBlock Text="Nombre" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+                <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,15">
+                    <TextBox x:Name="txtNombre" Text="Escribir el Nombre del Profesor" Foreground="Gray" 
+                             GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                             Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+                </Border>
+
+                <TextBlock Text="Estudios" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+                <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,15">
+                    <TextBox x:Name="txtEstudios" Text="Escribir Universidad de Estudio del Profesor" Foreground="Gray" 
+                             GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                             Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+                </Border>
+
+                <TextBlock Text="Investigaciones" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+                <Border Background="#C9D9F0" CornerRadius="6" Height="80" Margin="0,0,0,15">
+                    <TextBox x:Name="txtInvestigaciones" Text="Escribir Investigaciones del Profesor..." Foreground="Gray" 
+                             GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                             TextWrapping="Wrap" AcceptsReturn="True" Background="Transparent" BorderThickness="0" Padding="10"/>
+                </Border>
+
+                <TextBlock Text="Semblanza" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+                <Border Background="#C9D9F0" CornerRadius="6" Height="80" Margin="0,0,0,15">
+                    <TextBox x:Name="txtSemblanza" Text="Escribir Semblanza del Profesor..." Foreground="Gray" 
+                             GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                             TextWrapping="Wrap" AcceptsReturn="True" Background="Transparent" BorderThickness="0" Padding="10"/>
+                </Border>
+
+                <TextBlock Text="Fotografía" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+                <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,15">
+                    <TextBox x:Name="txtFotografia" Text="Seleccionar Ruta de Fotografía..." Foreground="Gray" 
+                             IsReadOnly="True" Cursor="Hand"
+                             GotFocus="txtFotografia_GotFocus" LostFocus="AddPlaceholder"
+                             Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+                </Border>
+
+                <TextBlock Text="Audio" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+                <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,30">
+                    <TextBox x:Name="txtAudio" Text="Seleccionar Ruta de Audio..." Foreground="Gray" 
+                             IsReadOnly="True" Cursor="Hand"
+                             GotFocus="txtAudio_GotFocus" LostFocus="AddPlaceholder"
+                             Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+                </Border>
+
+                <Button Click="BtnGuardar_Click" Width="150" Height="40" BorderThickness="0" Foreground="#1A2530" FontWeight="SemiBold" HorizontalAlignment="Center">
+                    <Button.Background>
+                        <SolidColorBrush Color="#678EC2"/>
+                    </Button.Background>
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock x:Name="TxtTextoBoton" Text="Guardar Cambios"/>
+                </Button>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

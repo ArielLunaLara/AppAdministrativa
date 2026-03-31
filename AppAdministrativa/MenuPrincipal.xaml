@@ -1,0 +1,208 @@
+﻿<Page x:Class="AppAdministrativa.MenuPrincipal"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="MenuPrincipal">
+
+    <Grid Background="#F0F4F8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="1" Background="#3F5C8C">
+            <TextBlock Text="Aplicación Administrativa" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <Frame x:Name="FrameSecundario" Grid.Row="1" Grid.Column="1" NavigationUIVisibility="Hidden"/>
+
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Panel.ZIndex="10">
+
+            <Border x:Name="BarraLateral" Width="60" Background="#8AAADD" ClipToBounds="True" 
+                    MouseEnter="Menu_MouseEnter" MouseLeave="Menu_MouseLeave">
+
+                <Grid>
+                    <StackPanel VerticalAlignment="Top" Margin="0,15,0,0">
+
+                        <Grid Width="44" Height="30" Margin="8,0,8,20">
+                            <Viewbox Width="22" Height="22" HorizontalAlignment="Center">
+                                <Path Data="M3,6 H21 M3,12 H21 M3,18 H21" Stroke="#1A2530" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </Viewbox>
+                        </Grid>
+
+                        <Border x:Name="BtnMenuProfesores" Background="#678EC2" CornerRadius="6" Margin="8,2" Padding="0,10" 
+                                Cursor="Hand" MouseLeftButtonUp="Menu_Profesores_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="22" Height="22">
+                                        <Path Data="M3,5 H21 A2,2 0 0,1 23,7 V15 A2,2 0 0,1 21,17 H3 A2,2 0 0,1 1,15 V7 A2,2 0 0,1 3,5 Z M12,7 A2.5,2.5 0 1,1 9.5,9.5 A2.5,2.5 0 0,1 12,7 Z M7,15 Q12,11 17,15" Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Profesores" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        
+
+                        <Border x:Name="BtnMenuAulas" Background="Transparent" CornerRadius="6" Margin="8,2" Padding="0,10" 
+                                Cursor="Hand" MouseLeftButtonUp="Menu_Aulas_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="22" Height="22">
+                                        <Path Data="M4,5 H20 A2,2 0 0,1 22,7 V17 A2,2 0 0,1 20,19 H4 A2,2 0 0,1 2,17 V7 A2,2 0 0,1 4,5 Z M10,14 H14 A1,1 0 0,1 15,15 V16 A1,1 0 0,1 14,17 H10 A1,1 0 0,1 9,16 V15 A1,1 0 0,1 10,14 Z" Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Aulas" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="BtnMenuMaterias" Background="Transparent" CornerRadius="6" Margin="8,2" Padding="0,10" Cursor="Hand" MouseLeftButtonUp="Menu_Materias_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="20" Height="20">
+                                        <Path Data="M6,2 H14 L20,8 V20 A2,2 0 0,1 18,22 H6 A2,2 0 0,1 4,20 V4 A2,2 0 0,1 6,2 Z M14,2 V8 H20 M10,16 L15,11 L17,13 L12,18 Z" Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Materias" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="BtnMenuHorarios" Background="Transparent" CornerRadius="6" Margin="8,2" Padding="0,10" 
+                           Cursor="Hand" MouseLeftButtonUp="Menu_Horarios_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="22" Height="22">
+                                        <Path Data="M12,2 A10,10 0 1,1 2,12 A10,10 0 0,1 12,2 Z M12,6 V12 L16,16" 
+                      Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Horarios" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="BtnMenuProyectos" Background="Transparent" CornerRadius="6" Margin="8,2" Padding="0,10" 
+Cursor="Hand" MouseLeftButtonUp="Menu_Proyectos_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="20" Height="20">
+                                        <Path Data="M6,2 H14 L20,8 V20 A2,2 0 0,1 18,22 H6 A2,2 0 0,1 4,20 V4 A2,2 0 0,1 6,2 Z M14,2 V8 H20 M9,13 L12,11 L15,13 V17 L12,19 L9,17 Z" 
+              Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Proyectos" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="BtnMenuMultimedia" Background="Transparent" CornerRadius="6" Margin="8,2" Padding="0,10" Cursor="Hand" MouseLeftButtonUp="Menu_Multimedia_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="22" Height="22">
+                                        <Path Data="M6,6 H14 A2,2 0 0,1 16,8 V16 A2,2 0 0,1 14,18 H6 A2,2 0 0,1 4,16 V8 A2,2 0 0,1 6,6 Z M10,6 V4 A2,2 0 0,1 12,2 H20 A2,2 0 0,1 22,4 V12 A2,2 0 0,1 20,14 H16 M9,10 L13,12 L9,14 Z" Stroke="#1A2530" StrokeThickness="1.5" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Multimedia" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="BtnMenuVideos360" Background="Transparent" CornerRadius="6" Margin="8,2" Padding="0,10" Cursor="Hand" MouseLeftButtonUp="Menu_Videos360_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="22" Height="22">
+                                        <Path Data="M4,8 H14 A2,2 0 0,1 16,10 V16 A2,2 0 0,1 14,18 H4 A2,2 0 0,1 2,16 V10 A2,2 0 0,1 4,8 Z M16,11 L22,8 V18 L16,15 M7,13 H11 M9,11 V15" Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Videos 360" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock x:Name="TxtAdministrar" Text="Administrar" FontSize="9" Foreground="#2C3E50" Margin="18,15,0,5" Visibility="Collapsed"/>
+
+                        <Border x:Name="BtnMenuUsuarios" 
+                                Background="Transparent" 
+                                CornerRadius="6" 
+                                Margin="8,2" 
+                                Padding="0,10" 
+                                Cursor="Hand" 
+                                MouseLeftButtonUp="Menu_Usuarios_Click">            
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="20" Height="20">
+                                        <Path Data="M12,4 A4,4 0 1,1 8,8 A4,4 0 0,1 12,4 Z M6,20 Q12,14 18,20" 
+                                          Stroke="#1A2530" 
+                                          StrokeThickness="1.5" 
+                                          StrokeLineJoin="Round" 
+                                          Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Usuarios" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+
+                        <Border x:Name="BtnMenuCamaras" 
+        Background="Transparent" 
+        CornerRadius="6" 
+        Margin="8,2" 
+        Padding="0,10" 
+        Cursor="Hand" 
+        MouseLeftButtonUp="Menu_Camaras_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="22" Height="22">
+                                        <Path Data="M4,8 H14 A2,2 0 0,1 16,10 V16 A2,2 0 0,1 14,18 H4 A2,2 0 0,1 2,16 V10 A2,2 0 0,1 4,8 Z M16,11 L22,8 V18 L16,15" Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Cámaras" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+
+                        <Border x:Name="BtnImpExp" 
+                            Background="Transparent" 
+                            CornerRadius="6" 
+                            Margin="8,2" 
+                            Padding="0,10" 
+                            Cursor="Hand" 
+                            MouseLeftButtonUp="ImpExp_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="20" Height="20">
+                                        <Path Data="M12,4 A4,4 0 1,1 8,8 A4,4 0 0,1 12,4 Z M6,20 Q12,14 18,20" 
+                                              Stroke="#1A2530" 
+                                              StrokeThickness="1.5" 
+                                              StrokeLineJoin="Round" 
+                                              Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Imp/Exp" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+
+
+
+                    </StackPanel>
+
+                    <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,20">
+                        <Border Margin="8,2" Padding="0,10" 
+                                Cursor="Hand" MouseLeftButtonUp="Menu_Salir_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="44">
+                                    <Viewbox Width="22" Height="22">
+                                        <Path Data="M14,4 H20 V20 H14 M14,12 H4 M8,8 L4,12 L8,16" Stroke="#1A2530" StrokeThickness="1.5" StrokeLineJoin="Round" Fill="Transparent"/>
+                                    </Viewbox>
+                                </Grid>
+                                <TextBlock Text="Salir" FontSize="13" Foreground="#1A2530" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

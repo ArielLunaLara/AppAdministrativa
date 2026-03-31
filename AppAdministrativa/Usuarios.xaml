@@ -1,0 +1,84 @@
+﻿<Page x:Class="AppAdministrativa.Usuarios"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Usuarios">
+
+    <Grid Background="#F0F4F8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        
+
+        <Grid Grid.Row="1" Margin="40,20,40,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="400"
+                    HorizontalAlignment="Left" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" Margin="10,0">
+                    <TextBlock Text="&#xE71E;" FontFamily="Segoe MDL2 Assets"
+                               VerticalAlignment="Center" Foreground="#4A4A4A" Margin="0,0,10,0"/>
+                    <TextBox x:Name="txtBuscar" Text="Buscar..." Background="Transparent"
+                             BorderThickness="0" VerticalAlignment="Center" Width="350" Foreground="#4A4A4A"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Button Click="BtnAgregar_Click" Width="100" Height="35" Margin="0,0,15,0"
+                        BorderThickness="0" Foreground="White" Background="#8AAADD">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock Text="Agregar"/>
+                </Button>
+                <Button Click="BtnEditar_Click" Width="100" Height="35" Margin="0,0,15,0"
+                        BorderThickness="0" Foreground="White" Background="#678EC2">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock Text="Editar"/>
+                </Button>
+                <Button Click="BtnEliminar_Click" Width="100" Height="35"
+                        BorderThickness="0" Foreground="White" Background="#3F5C8C">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock Text="Eliminar"/>
+                </Button>
+            </StackPanel>
+
+            <!-- ID oculto — solo visible en BD. Columnas: Usuario, Contraseña (oculta), Rol -->
+            <DataGrid x:Name="TablaUsuarios" Grid.Row="2" Background="#E2E9F4"
+                      RowBackground="#EAEFF5" AlternatingRowBackground="#D9E2EF"
+                      AutoGenerateColumns="False" HeadersVisibility="Column"
+                      GridLinesVisibility="All" BorderBrush="#3F5C8C"
+                      IsReadOnly="True" SelectionMode="Single">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#678EC2"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Padding" Value="10,5"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Usuario"    Binding="{Binding NombreUsuario}" Width="2*"/>
+                    <DataGridTextColumn Header="Contraseña" Binding="{Binding PasswordMask}"  Width="2*"/>
+                    <DataGridTextColumn Header="Rol"        Binding="{Binding Role}"           Width="80"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Page>

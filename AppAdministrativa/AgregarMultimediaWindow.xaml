@@ -1,0 +1,63 @@
+﻿<Window x:Class="AppAdministrativa.AgregarMultimediaWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Agregar Multimedia" Height="470" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F0F4F8">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="#3F5C8C">
+            <TextBlock Text="Aplicación Administrativa" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="#678EC2">
+            <TextBlock x:Name="TxtTitulo" Text="Agregar Registro a Multimedia" Foreground="#1A2530" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Margin="30,30,30,30">
+
+            <!-- Proyecto: ComboBox cargado desde BD -->
+            <TextBlock Text="Proyecto" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" HorizontalAlignment="Stretch" Margin="0,0,0,20">
+                <ComboBox x:Name="cmbProyecto" Background="Transparent" BorderThickness="0"
+                          VerticalContentAlignment="Center" Padding="10,0" Foreground="#4A4A4A"
+                          IsEditable="True" IsTextSearchEnabled="True"/>
+            </Border>
+
+            <!-- Ruta: abre explorador de archivos -->
+            <TextBlock Text="Ruta del archivo" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" HorizontalAlignment="Stretch" Margin="0,0,0,20">
+                <TextBox x:Name="txtRuta" Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0" Foreground="#4A4A4A"
+                         IsReadOnly="True" Cursor="Hand" GotFocus="txtRuta_GotFocus"
+                         Text="Seleccionar archivo..."/>
+            </Border>
+
+            <!-- Descripción -->
+            <TextBlock Text="Descripción" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" HorizontalAlignment="Stretch" Margin="0,0,0,40">
+                <TextBox x:Name="txtDescripcion" Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0" Foreground="#4A4A4A"/>
+            </Border>
+
+            <Button Click="BtnGuardar_Click" Width="150" Height="40" BorderThickness="0"
+                    Foreground="White" FontWeight="SemiBold" HorizontalAlignment="Center" Cursor="Hand">
+                <Button.Background>
+                    <SolidColorBrush Color="#678EC2"/>
+                </Button.Background>
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </Button.Resources>
+                <TextBlock x:Name="TxtBoton" Text="Guardar"/>
+            </Button>
+
+        </StackPanel>
+    </Grid>
+</Window>

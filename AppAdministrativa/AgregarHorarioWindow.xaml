@@ -1,0 +1,119 @@
+﻿<Window x:Class="AppAdministrativa.AgregarHorarioWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Agregar Horario" Height="700" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F0F4F8">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="#3F5C8C">
+            <TextBlock Text="Aplicación Administrativa" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="#678EC2">
+            <TextBlock x:Name="TxtTitulo" Text="Agregar Registro a Clases" Foreground="#1A2530" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Margin="30,30,30,30">
+
+            <!-- ID Clase: ej. "20501", "20501L" -->
+            <TextBlock Text="ID Clase" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="120" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <TextBox x:Name="txtIDClase" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+            </Border>
+
+            <!-- Tipo -->
+            <TextBlock Text="Tipo" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="140" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <ComboBox x:Name="cmbTipo" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0" SelectedIndex="0">
+                    <ComboBoxItem Content="LM-JV"/>
+                    <ComboBoxItem Content="LM-JV LAB"/>
+                    <ComboBoxItem Content="MA-JU"/>
+                    <ComboBoxItem Content="MA-JU LAB"/>
+                    <ComboBoxItem Content="MI-VI"/>
+                    <ComboBoxItem Content="LAB"/>
+                    <ComboBoxItem Content="T"/>
+                </ComboBox>
+            </Border>
+
+            <!-- Hora Inicio -->
+            <TextBlock Text="Hora Inicio" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="140" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <ComboBox x:Name="cmbHoraInicio" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0" SelectedIndex="0">
+                    <ComboBoxItem Content="07:00"/>
+                    <ComboBoxItem Content="08:00"/>
+                    <ComboBoxItem Content="09:00"/>
+                    <ComboBoxItem Content="10:00"/>
+                    <ComboBoxItem Content="11:00"/>
+                    <ComboBoxItem Content="12:00"/>
+                    <ComboBoxItem Content="13:00"/>
+                    <ComboBoxItem Content="14:00"/>
+                    <ComboBoxItem Content="15:00"/>
+                    <ComboBoxItem Content="16:00"/>
+                    <ComboBoxItem Content="17:00"/>
+                    <ComboBoxItem Content="18:00"/>
+                    <ComboBoxItem Content="19:00"/>
+                    <ComboBoxItem Content="20:00"/>
+                </ComboBox>
+            </Border>
+
+            <!-- Hora Fin -->
+            <TextBlock Text="Hora Fin" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="140" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <ComboBox x:Name="cmbHoraFin" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0" SelectedIndex="1">
+                    <ComboBoxItem Content="07:00"/>
+                    <ComboBoxItem Content="08:00"/>
+                    <ComboBoxItem Content="09:00"/>
+                    <ComboBoxItem Content="10:00"/>
+                    <ComboBoxItem Content="11:00"/>
+                    <ComboBoxItem Content="12:00"/>
+                    <ComboBoxItem Content="13:00"/>
+                    <ComboBoxItem Content="14:00"/>
+                    <ComboBoxItem Content="15:00"/>
+                    <ComboBoxItem Content="16:00"/>
+                    <ComboBoxItem Content="17:00"/>
+                    <ComboBoxItem Content="18:00"/>
+                    <ComboBoxItem Content="19:00"/>
+                    <ComboBoxItem Content="20:00"/>
+                    <ComboBoxItem Content="21:00"/>
+                </ComboBox>
+            </Border>
+
+            <!-- ID Profesor -->
+            <TextBlock Text="ID Profesor" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="120" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <TextBox x:Name="txtIDProfesor" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+            </Border>
+
+            <!-- ID Aula -->
+            <TextBlock Text="ID Aula" FontSize="11" Foreground="#1A2530" Margin="0,0,0,40">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="11"/>
+                        <Setter Property="Foreground" Value="#1A2530"/>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="120" HorizontalAlignment="Left" Margin="0,-35,0,40">
+                <TextBox x:Name="txtIDAula" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+            </Border>
+
+            <Button Click="BtnGuardar_Click" Width="120" Height="40" BorderThickness="0" Foreground="#1A2530" FontWeight="SemiBold" HorizontalAlignment="Center" Cursor="Hand">
+                <Button.Background>
+                    <SolidColorBrush Color="#678EC2"/>
+                </Button.Background>
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </Button.Resources>
+                <TextBlock Text="Guardar"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

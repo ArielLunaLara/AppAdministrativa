@@ -1,0 +1,83 @@
+﻿<Page x:Class="AppAdministrativa.Videos360"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Videos 360">
+
+    <Grid Background="#F0F4F8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1" Margin="40,20,40,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!--  Barra de búsqueda -->
+            <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="400" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" Margin="10,0">
+                    <TextBlock Text="&#xE71E;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Foreground="#4A4A4A" Margin="0,0,10,0"/>
+
+                    <TextBox x:Name="txtBuscar"
+                             Text="Buscar video..."
+                             Background="Transparent"
+                             BorderThickness="0"
+                             VerticalAlignment="Center"
+                             Width="350"
+                             Foreground="Gray"
+                             TextChanged="txtBuscar_TextChanged"
+                             GotFocus="txtBuscar_GotFocus"
+                             LostFocus="txtBuscar_LostFocus"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Botones -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Button Click="BtnEditar_Click" Width="100" Height="35" Margin="0,0,15,0" Foreground="White" Background="#678EC2">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock Text="Editar Ruta"/>
+                </Button>
+
+                <Button Click="BtnLimpiar_Click" Width="100" Height="35" Foreground="White" Background="#3F5C8C">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock Text="Limpiar Ruta"/>
+                </Button>
+            </StackPanel>
+
+            <!-- Tabla -->
+            <DataGrid x:Name="TablaVideos" Grid.Row="2" Background="#E2E9F4"
+                      AutoGenerateColumns="False"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="All"
+                      BorderBrush="#3F5C8C"
+                      IsReadOnly="True"
+                      SelectionMode="Single">
+
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#678EC2"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID Salón" Binding="{Binding IDAula}" Width="120"/>
+                    <DataGridTextColumn Header="Ruta Video 360" Binding="{Binding RutaVideo}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Page>
