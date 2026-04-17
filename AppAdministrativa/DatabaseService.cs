@@ -163,20 +163,29 @@ namespace AppAdministrativa
             cmd.ExecuteNonQuery();
         }
 
-        public void EliminarProfesor(string clave)
-        {
-            if (!IsAvailable) return;
-            using var conn = GetConnection(); conn.Open();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = "DELETE FROM Teacher WHERE id_teacher=$id";
-            cmd.Parameters.AddWithValue("$id", int.Parse(clave));
-            cmd.ExecuteNonQuery();
-        }
+		public bool EliminarProfesor(string clave)
+		{
+			if (!IsAvailable) return false;
+			try
+			{
+				using var conn = GetConnection();
+				conn.Open();
+				var cmd = conn.CreateCommand();
+				cmd.CommandText = "DELETE FROM Teacher WHERE id_teacher=$id";
+				cmd.Parameters.AddWithValue("$id", int.Parse(clave));
+				cmd.ExecuteNonQuery();
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
 
-        // ══════════════════════════════════════════════════════════════════════
-        // MATERIAS / COURSES
-        // ══════════════════════════════════════════════════════════════════════
-        public List<Materia> GetMaterias()
+		// ══════════════════════════════════════════════════════════════════════
+		// MATERIAS / COURSES
+		// ══════════════════════════════════════════════════════════════════════
+		public List<Materia> GetMaterias()
         {
             var lista = new List<Materia>();
             if (!IsAvailable) return lista;
@@ -218,6 +227,7 @@ namespace AppAdministrativa
             cmd.Parameters.AddWithValue("$c", m.Companias ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("$r", m.RutaTemario ?? (object)DBNull.Value);
             cmd.ExecuteNonQuery();
+
         }
 
         public void EliminarMateria(string id)

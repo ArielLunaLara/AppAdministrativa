@@ -21,7 +21,12 @@
             <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="400" HorizontalAlignment="Left" Margin="0,0,0,20">
                 <StackPanel Orientation="Horizontal" Margin="10,0">
                     <TextBlock Text="&#xE71E;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Foreground="#4A4A4A" Margin="0,0,10,0"/>
-                    <TextBox x:Name="txtBuscar" Text="Buscar multimedia..." Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Width="350" Foreground="#4A4A4A"/>
+                    <TextBox x:Name="txtBuscar" 
+         Text="Buscar multimedia..." 
+         TextChanged="txtBuscar_TextChanged"
+         GotFocus="txtBuscar_GotFocus" 
+         LostFocus="txtBuscar_LostFocus"
+         Foreground="Gray" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Width="350"/>
                 </StackPanel>
             </Border>
 

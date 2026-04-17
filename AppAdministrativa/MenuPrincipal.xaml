@@ -15,7 +15,12 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Grid.Column="1" Background="#3F5C8C">
-            <TextBlock Text="Aplicación Administrativa" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            <TextBlock x:Name="TxtTituloPagina" 
+               Text="Aplicación Administrativa" 
+               Foreground="White" 
+               FontSize="16" 
+               VerticalAlignment="Center" 
+               Margin="20,0,0,0"/>
         </Grid>
 
         <Frame x:Name="FrameSecundario" Grid.Row="1" Grid.Column="1" NavigationUIVisibility="Hidden"/>

@@ -6,134 +6,146 @@ using System.Windows.Media;
 
 namespace AppAdministrativa
 {
-    public partial class Aula : Page
-    {
-        ObservableCollection<FilaAula> datosAulas = new();
-        ObservableCollection<FilaAula> datosFiltrados = new();
+	public partial class Aula : Page
+	{
+		ObservableCollection<FilaAula> datosAulas = new();
+		ObservableCollection<FilaAula> datosFiltrados = new();
 
-        public Aula()
-        {
-            InitializeComponent();
-            CargarDesdeBD();
-        }
+		public Aula()
+		{
+			InitializeComponent();
+			CargarDesdeBD();
+		}
 
-        private void CargarDesdeBD()
-        {
-            datosAulas = new ObservableCollection<FilaAula>(
-                DatabaseService.Instance.GetSalones());
-            datosFiltrados = new ObservableCollection<FilaAula>(datosAulas);
-            TablaAulas.ItemsSource = datosFiltrados;
-           
-        }
-        //  BUSCADOR
-        private void txtBuscar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (txtBuscar.Text == "Buscar Aula...")
-                return;
+		private void CargarDesdeBD()
+		{
+			var salones = DatabaseService.Instance.GetSalones();
+			datosAulas = new ObservableCollection<FilaAula>(salones);
+			datosFiltrados.Clear();
+			foreach (var a in datosAulas) datosFiltrados.Add(a);
+			TablaAulas.ItemsSource = datosFiltrados;
+		}
 
-            string filtro = txtBuscar.Text.ToLower();
+		private void txtBuscar_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (txtBuscar.Text == "Buscar Aula...") return;
+			string filtro = txtBuscar.Text.ToLower();
+			var resultado = datosAulas.Where(v => v.Nombre.ToLower().Contains(filtro) || v.Piso.ToLower().Contains(filtro)).ToList();
+			datosFiltrados.Clear();
+			foreach (var item in resultado) datosFiltrados.Add(item);
+		}
 
-            var resultado = datosAulas
-                .Where(v => (v.Nombre != null && v.Nombre.ToLower().Contains(filtro)) ||
-                            (v.Piso != null && v.Piso.ToLower().Contains(filtro)))
-                .ToList();
+		private void txtBuscar_GotFocus(object sender, RoutedEventArgs e)
+		{
+			if (txtBuscar.Text == "Buscar Aula...")
+			{
+				txtBuscar.Text = "";
+				txtBuscar.Foreground = Brushes.Black;
+			}
+		}
 
-            datosFiltrados.Clear();
+		private void txtBuscar_LostFocus(object sender, RoutedEventArgs e)
+		{
+			if (string.IsNullOrWhiteSpace(txtBuscar.Text))
+			{
+				txtBuscar.Text = "Buscar Aula...";
+				txtBuscar.Foreground = Brushes.Gray;
+			}
+		}
 
-            foreach (var item in resultado)
-                datosFiltrados.Add(item);
-        }
+		private void BtnAgregar_Click(object sender, RoutedEventArgs e)
+		{
+			AgregarAulaWindow ventana = new AgregarAulaWindow();
+			if (ventana.ShowDialog() == true)
+			{
+				DatabaseService.Instance.AgregarSalon(ventana.NuevaAula);
 
-        // Placeholder comportamiento
-        private void txtBuscar_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (txtBuscar.Text == "Buscar video...")
-            {
-                txtBuscar.Text = "";
-                txtBuscar.Foreground = Brushes.Black;
-            }
-        }
+				// Agregamos a la lista maestra
+				datosAulas.Add(ventana.NuevaAula);
 
-        private void txtBuscar_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtBuscar.Text))
-            {
-                txtBuscar.Text = "Buscar video...";
-                txtBuscar.Foreground = Brushes.Gray;
-            }
-        }
+				// Actualizamos lo que el usuario ve
+				ActualizarTablaVisual();
+			}
+		}
 
-        private void BtnAgregar_Click(object sender, RoutedEventArgs e)
-        {
-            AgregarAulaWindow ventana = new AgregarAulaWindow();
-            if (ventana.ShowDialog() == true)
-            {
-                DatabaseService.Instance.AgregarSalon(ventana.NuevaAula);
-                datosAulas.Add(ventana.NuevaAula);
-            }
-        }
+		private void BtnEditar_Click(object sender, RoutedEventArgs e)
+		{
+			if (TablaAulas.SelectedItem is FilaAula aulaSeleccionada)
+			{
+				string nombreOriginal = aulaSeleccionada.Nombre;
 
-        private void BtnEditar_Click(object sender, RoutedEventArgs e)
-        {
-            if (TablaAulas.SelectedItem is FilaAula aulaSeleccionada)
-            {
-                string nombreOriginal = aulaSeleccionada.Nombre;
-                AgregarAulaWindow ventana = new AgregarAulaWindow(aulaSeleccionada);
-                if (ventana.ShowDialog() == true)
-                {
-                    // Pasamos el nombre original por si cambió (es la PK)
-                    DatabaseService.Instance.EditarSalon(aulaSeleccionada, nombreOriginal);
-                    TablaAulas.Items.Refresh();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Selecciona un aula para editar.",
-                    "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
+				// 1. Buscamos la posición exacta en la lista maestra
+				int indexMaestro = datosAulas.IndexOf(aulaSeleccionada);
 
-        private void BtnEliminar_Click(object sender, RoutedEventArgs e)
-        {
-            if (TablaAulas.SelectedItem is FilaAula aulaSeleccionada)
-            {
-                var respuesta = MessageBox.Show(
-                    $"¿Eliminar el aula '{aulaSeleccionada.Nombre}'?",
-                    "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Question);
+				AgregarAulaWindow ventana = new AgregarAulaWindow(aulaSeleccionada);
 
-                if (respuesta == MessageBoxResult.Yes)
-                {
-                    DatabaseService.Instance.EliminarSalon(aulaSeleccionada.Nombre);
-                    datosAulas.Remove(aulaSeleccionada);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Selecciona un aula para eliminar.",
-                    "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
+				if (ventana.ShowDialog() == true)
+				{
+					// 2. Ejecutamos la edición en BD
+					DatabaseService.Instance.EditarSalon(aulaSeleccionada, nombreOriginal);
 
+					// 3. REEMPLAZO FORZADO:
+					// Al asignar el objeto de nuevo en la misma posición, la ObservableCollection 
+					// lanza un evento de "Replace" y la tabla se actualiza al instante.
+					if (indexMaestro != -1)
+					{
+						datosAulas[indexMaestro] = null; // "Limpiamos" momentáneamente
+						datosAulas[indexMaestro] = aulaSeleccionada; // Reasignamos el objeto editado
+					}
 
+					// 4. Sincronizamos la vista filtrada
+					ActualizarTablaVisual();
+				}
+			}
+			else MessageBox.Show("Selecciona un aula para editar.", "Aviso");
+		}
 
-        private void Filtro_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (sender is TextBlock item)
-                item.Background = new System.Windows.Media.SolidColorBrush(
-                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter
-                    .ConvertFromString("#678EC2"));
-        }
+		private void BtnEliminar_Click(object sender, RoutedEventArgs e)
+		{
+			if (TablaAulas.SelectedItem is FilaAula aulaSeleccionada)
+			{
+				if (MessageBox.Show($"¿Eliminar '{aulaSeleccionada.Nombre}'?", "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+				{
+					DatabaseService.Instance.EliminarSalon(aulaSeleccionada.Nombre);
 
-        private void Filtro_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (sender is TextBlock item)
-                item.Background = System.Windows.Media.Brushes.Transparent;
-        }
-    }
+					// Eliminamos de la fuente principal
+					datosAulas.Remove(aulaSeleccionada);
 
-    public class FilaAula
-    {
-        public string Nombre { get; set; } = "";   // "I-01", "I-04" — es la PK
-        public string Piso { get; set; } = "";
-    }
+					ActualizarTablaVisual();
+				}
+			}
+		}
+
+		// Método de actualización optimizado
+		private void ActualizarTablaVisual()
+		{
+			// 1. Desvinculamos la tabla por completo para que no escuche cambios mientras limpiamos
+			TablaAulas.ItemsSource = null;
+
+			string filtro = txtBuscar.Text.ToLower();
+			datosFiltrados.Clear();
+
+			// 2. Determinamos la fuente de datos
+			var fuente = (string.IsNullOrWhiteSpace(filtro) || filtro == "buscar aula...")
+						 ? datosAulas.ToList() // Usamos .ToList() para evitar problemas de enumeración
+						 : datosAulas.Where(v => v != null &&
+							(v.Nombre.ToLower().Contains(filtro) || v.Piso.ToLower().Contains(filtro))).ToList();
+
+			// 3. Llenamos la colección filtrada
+			foreach (var a in fuente)
+			{
+				if (a != null) datosFiltrados.Add(a);
+			}
+
+			// 4. Volvemos a vincular la tabla. 
+			// Al asignar ItemsSource de nuevo, WPF reconstruye la vista de una sola vez
+			TablaAulas.ItemsSource = datosFiltrados;
+		}
+	}
+
+	public class FilaAula
+	{
+		public string Nombre { get; set; } = "";
+		public string Piso { get; set; } = "";
+	}
 }

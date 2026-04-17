@@ -24,15 +24,15 @@
                     <TextBlock Text="&#xE71E;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Foreground="#4A4A4A" Margin="0,0,10,0"/>
 
                     <TextBox x:Name="txtBuscar"
-                 Text="Buscar Aula..."
-                 Background="Transparent"
-                 BorderThickness="0"
-                 VerticalAlignment="Center"
-                 Width="350"
-                 Foreground="Gray"
-                 TextChanged="txtBuscar_TextChanged"
-                 GotFocus="txtBuscar_GotFocus"
-                 LostFocus="txtBuscar_LostFocus"/>
+         Text="Buscar Aula..."
+         Background="Transparent"
+         BorderThickness="0"
+         VerticalAlignment="Center"
+         Width="350"
+         Foreground="Gray"
+         TextChanged="txtBuscar_TextChanged"
+         GotFocus="txtBuscar_GotFocus"
+         LostFocus="txtBuscar_LostFocus"/>
                 </StackPanel>
             </Border>
 

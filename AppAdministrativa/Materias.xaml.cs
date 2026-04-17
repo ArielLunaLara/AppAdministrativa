@@ -72,21 +72,23 @@ namespace AppAdministrativa
             }
         }
 
-        private void BtnEditar_Click(object sender, RoutedEventArgs e)
-        {
-            if (TablaMaterias.SelectedItem is Materia seleccionada)
-            {
-                AgregarMateriaWindow ventana = new AgregarMateriaWindow(seleccionada);
-                if (ventana.ShowDialog() == true)
-                {
-                    DatabaseService.Instance.EditarMateria(seleccionada);
-                    TablaMaterias.Items.Refresh();
-                }
-            }
-            else MessageBox.Show("Selecciona una materia para editar.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+		private void BtnEditar_Click(object sender, RoutedEventArgs e)
+		{
+			if (TablaMaterias.SelectedItem is Materia seleccionada)
+			{
+				AgregarMateriaWindow ventana = new AgregarMateriaWindow(seleccionada);
+				if (ventana.ShowDialog() == true)
+				{
+					DatabaseService.Instance.EditarMateria(seleccionada);
 
-        private void BtnEliminar_Click(object sender, RoutedEventArgs e)
+					// Esto obliga a la UI a mirar los nuevos valores del objeto
+					TablaMaterias.Items.Refresh();
+				}
+			}
+			else MessageBox.Show("Selecciona una materia.", "Aviso");
+		}
+
+		private void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             if (TablaMaterias.SelectedItem is Materia seleccionada)
             {

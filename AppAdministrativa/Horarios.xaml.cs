@@ -46,26 +46,28 @@ namespace AppAdministrativa
                 datosFiltrados.Add(item);
         }
 
-        // Placeholder comportamiento
-        private void txtBuscar_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (txtBuscar.Text == "Buscar video...")
-            {
-                txtBuscar.Text = "";
-                txtBuscar.Foreground = Brushes.Black;
-            }
-        }
 
-        private void txtBuscar_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtBuscar.Text))
-            {
-                txtBuscar.Text = "Buscar video...";
-                txtBuscar.Foreground = Brushes.Gray;
-            }
-        }
 
-        private void BtnAgregar_Click(object sender, RoutedEventArgs e)
+		// Placeholder comportamiento
+		private void txtBuscar_GotFocus(object sender, RoutedEventArgs e)
+		{
+			if (txtBuscar.Text == "Buscar Horario...")
+			{
+				txtBuscar.Text = "";
+				txtBuscar.Foreground = Brushes.Black;
+			}
+		}
+
+		private void txtBuscar_LostFocus(object sender, RoutedEventArgs e)
+		{
+			if (string.IsNullOrWhiteSpace(txtBuscar.Text))
+			{
+				txtBuscar.Text = "Buscar Horario...";
+				txtBuscar.Foreground = Brushes.Gray;
+			}
+		}
+
+		private void BtnAgregar_Click(object sender, RoutedEventArgs e)
         {
             AgregarHorarioWindow ventana = new AgregarHorarioWindow();
             if (ventana.ShowDialog() == true)

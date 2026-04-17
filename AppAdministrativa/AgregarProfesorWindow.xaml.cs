@@ -95,23 +95,37 @@ namespace AppAdministrativa
 		private void BtnGuardar_Click(object sender, RoutedEventArgs e)
 		{
 			string clave = txtClave.Text.Trim();
+			string nombre = txtNombre.Text.Trim();
 
-			// 1. Validar PK no vacía
+			// VALIDACIÓN DE CAMPOS OBLIGATORIOS
 			if (string.IsNullOrWhiteSpace(clave) || clave == "#000")
 			{
 				MessageBox.Show("La Clave es obligatoria.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
 				return;
 			}
 
-			// 2. Validar Clave Duplicada (PK)
+			if (string.IsNullOrWhiteSpace(nombre) || nombre == "Escribir el Nombre del Profesor")
+			{
+				MessageBox.Show("El Nombre es obligatorio.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
+				return;
+			}
+
+			// Validar Clave Duplicada (PK)
 			if (listaExistente.Any(p => p.Clave == clave && p != profesorAEditar))
 			{
 				MessageBox.Show($"La clave '{clave}' ya existe.", "PK Duplicada", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
-			if (profesorAEditar != null) { AsignarCampos(profesorAEditar); }
-			else { NuevoProfesor = new Profesor(); AsignarCampos(NuevoProfesor); }
+			if (profesorAEditar != null)
+			{
+				AsignarCampos(profesorAEditar);
+			}
+			else
+			{
+				NuevoProfesor = new Profesor();
+				AsignarCampos(NuevoProfesor);
+			}
 
 			this.DialogResult = true;
 			this.Close();

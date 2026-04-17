@@ -64,17 +64,29 @@ namespace AppAdministrativa
             }
         }
 
-        private void BtnAgregar_Click(object sender, RoutedEventArgs e)
-        {
-            AgregarProfesorWindow ventana = new AgregarProfesorWindow(datosProfesores);
-            if (ventana.ShowDialog() == true)
-            {
-                DatabaseService.Instance.AgregarProfesor(ventana.NuevoProfesor);
-                datosProfesores.Add(ventana.NuevoProfesor);
-            }
-        }
+		private void BtnAgregar_Click(object sender, RoutedEventArgs e)
+		{
+			AgregarProfesorWindow ventana = new AgregarProfesorWindow(datosProfesores);
+			if (ventana.ShowDialog() == true)
+			{
+				DatabaseService.Instance.AgregarProfesor(ventana.NuevoProfesor);
 
-        private void BtnEditar_Click(object sender, RoutedEventArgs e)
+				datosProfesores.Add(ventana.NuevoProfesor);
+
+				txtBuscar.Text = "Buscar Profesor...";
+				txtBuscar.Foreground = Brushes.Gray;
+
+				datosFiltrados.Clear();
+				foreach (var p in datosProfesores)
+				{
+					datosFiltrados.Add(p);
+				}
+
+				TablaProfesores.Items.Refresh();
+			}
+		}
+
+		private void BtnEditar_Click(object sender, RoutedEventArgs e)
         {
             if (TablaProfesores.SelectedItem is Profesor seleccionado)
             {
@@ -88,21 +100,45 @@ namespace AppAdministrativa
             else MessageBox.Show("Selecciona un profesor para editar.", "Aviso");
         }
 
-        private void BtnEliminar_Click(object sender, RoutedEventArgs e)
-        {
-            if (TablaProfesores.SelectedItem is Profesor seleccionado)
-            {
-                if (MessageBox.Show($"¿Eliminar a {seleccionado.Nombre}?", "Confirmar",
-                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    DatabaseService.Instance.EliminarProfesor(seleccionado.Clave);
-                    datosProfesores.Remove(seleccionado);
-                }
-            }
-        }
+		private void BtnEliminar_Click(object sender, RoutedEventArgs e)
+		{
+			if (TablaProfesores.SelectedItem is Profesor seleccionado)
+			{
+				if (MessageBox.Show($"¿Eliminar a {seleccionado.Nombre}?", "Confirmar",
+					MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+				{
+					bool eliminado = DatabaseService.Instance.EliminarProfesor(seleccionado.Clave);
 
-        
-    }
+					if (eliminado)
+					{
+						datosProfesores.Remove(seleccionado);
+
+						txtBuscar.Text = "Buscar Profesor...";
+						txtBuscar.Foreground = Brushes.Gray;
+
+						datosFiltrados.Clear();
+						foreach (var p in datosProfesores)
+						{
+							datosFiltrados.Add(p);
+						}
+
+						TablaProfesores.Items.Refresh();
+					}
+					else
+					{
+						MessageBox.Show("No se puede eliminar al profesor porque tiene horarios o clases asignadas. Primero elimina sus clases.",
+							"Error al eliminar", MessageBoxButton.OK, MessageBoxImage.Error);
+					}
+				}
+			}
+			else
+			{
+				MessageBox.Show("Selecciona un profesor para eliminar.", "Aviso");
+			}
+		}
+
+
+	}
 
     public class Profesor
     {
