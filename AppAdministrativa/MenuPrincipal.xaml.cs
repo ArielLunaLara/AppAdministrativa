@@ -33,6 +33,7 @@ namespace AppAdministrativa
 			BtnMenuMultimedia.Background = Brushes.Transparent;
 			BtnMenuCamaras.Background = Brushes.Transparent;
 			BtnMenuVideos360.Background = Brushes.Transparent;
+			BtnImpExp.Background = Brushes.Transparent; 
 		}
 
 		private void Menu_Profesores_Click(object sender, MouseButtonEventArgs e)

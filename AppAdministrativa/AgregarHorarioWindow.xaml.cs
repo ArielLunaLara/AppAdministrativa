@@ -1,84 +1,155 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace AppAdministrativa
 {
-    public partial class AgregarHorarioWindow : Window
-    {
-        public FilaHorario NuevoHorario { get; private set; }
-        private FilaHorario? horarioAEditar;
+	public partial class AgregarHorarioWindow : Window
+	{
+		public FilaHorario NuevoHorario { get; private set; }
+		private FilaHorario? horarioAEditar;
+		private string? _idClaseOriginal; // Guardamos la PK original para el DELETE
 
-        // Constructor para AGREGAR
-        public AgregarHorarioWindow()
-        {
-            InitializeComponent();
-        }
+		private List<(string Id, string Nombre)> _profesores = new();
+		private List<(string Id, string Nombre)> _materias = new();
 
-        // Constructor para EDITAR
-        public AgregarHorarioWindow(FilaHorario horario)
-        {
-            InitializeComponent();
-            horarioAEditar = horario;
-            TxtTitulo.Text = "Editar Registro de Clase";
+		// Constructor AGREGAR
+		public AgregarHorarioWindow()
+		{
+			InitializeComponent();
+			CargarDesplegables();
+		}
 
-            txtIDClase.Text = horario.IDClase;
-            txtIDClase.IsEnabled = false; // el ID no se puede cambiar al editar
+		// Constructor EDITAR
+		public AgregarHorarioWindow(FilaHorario horario)
+		{
+			InitializeComponent();
+			horarioAEditar = horario;
+			_idClaseOriginal = horario.IDClase; // Guardamos PK antes de cualquier cambio
+			TxtTitulo.Text = "Editar Registro de Clase";
 
-            cmbTipo.Text = horario.Tipo;
-            cmbHoraInicio.Text = horario.HoraInicio;
-            cmbHoraFin.Text = horario.HoraFin;
-            txtIDProfesor.Text = horario.IDProfesor;
-            txtIDAula.Text = horario.IDAula;
-        }
+			CargarDesplegables();
 
-        private void BtnGuardar_Click(object sender, RoutedEventArgs e)
-        {
-            // Validación básica
-            if (string.IsNullOrWhiteSpace(txtIDClase.Text) ||
-                string.IsNullOrWhiteSpace(txtIDProfesor.Text) ||
-                string.IsNullOrWhiteSpace(txtIDAula.Text))
-            {
-                MessageBox.Show("Por favor completa todos los campos.", "Campos requeridos",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+			// Preseleccionar materia — buscar por los primeros 4 dígitos del IDClase
+			string idCurso = horario.IDClase.Length >= 4 ? horario.IDClase[..4] : horario.IDClase;
+			SeleccionarEnCombo(cmbIDClase, idCurso);
 
-            string idClase = txtIDClase.Text.Trim().Replace(" ", "");
-            string tipo = cmbTipo.Text;
-            string horaInicio = cmbHoraInicio.Text;
-            string horaFin = cmbHoraFin.Text;
-            string idProfesor = txtIDProfesor.Text.Trim();
-            string idAula = txtIDAula.Text.Trim();
+			// Preseleccionar tipo, horas
+			SeleccionarEnComboByContent(cmbTipo, horario.Tipo);
+			SeleccionarEnComboByContent(cmbHoraInicio, horario.HoraInicio);
+			SeleccionarEnComboByContent(cmbHoraFin, horario.HoraFin);
 
-            if (horarioAEditar != null)
-            {
-                // EDITAR: actualizar propiedades del objeto existente
-                horarioAEditar.Tipo = tipo;
-                horarioAEditar.HoraInicio = horaInicio;
-                horarioAEditar.HoraFin = horaFin;
-                horarioAEditar.IDProfesor = idProfesor;
-                horarioAEditar.IDAula = idAula;
+			// Preseleccionar profesor y aula
+			SeleccionarEnCombo(cmbIDProfesor, horario.IDProfesor);
+			SeleccionarEnComboByContent(cmbIDAula, horario.IDAula);
+		}
 
-                // Persistir en BD
-                DatabaseService.Instance.EditarHorario(horarioAEditar, idAula);
-            }
-            else
-            {
-                // AGREGAR: crear nuevo objeto y guardarlo en BD
-                NuevoHorario = new FilaHorario
-                {
-                    IDClase = idClase,
-                    Tipo = tipo,
-                    HoraInicio = horaInicio,
-                    HoraFin = horaFin,
-                    IDProfesor = idProfesor,
-                    IDAula = idAula
-                };
+		private void CargarDesplegables()
+		{
+			// Materias
+			_materias = DatabaseService.Instance.GetMateriasParaCombo();
+			foreach (var m in _materias)
+				cmbIDClase.Items.Add(new ComboBoxItem
+				{
+					Content = $"{m.Id} — {m.Nombre}",
+					Tag = m.Id
+				});
 
-                DatabaseService.Instance.AgregarHorario(NuevoHorario, idAula);
-            }
+			// Profesores
+			_profesores = DatabaseService.Instance.GetProfesoresParaCombo();
+			foreach (var p in _profesores)
+				cmbIDProfesor.Items.Add(new ComboBoxItem
+				{
+					Content = $"{p.Id} — {p.Nombre}",
+					Tag = p.Id
+				});
 
-            this.DialogResult = true;
-            this.Close();
-        }
-    }
+			// Aulas
+			var aulas = DatabaseService.Instance.GetNombresAulas();
+			foreach (var a in aulas)
+				cmbIDAula.Items.Add(new ComboBoxItem { Content = a, Tag = a });
+		}
+
+		// Busca en el ComboBox por Tag (ID)
+		private void SeleccionarEnCombo(ComboBox cmb, string id)
+		{
+			foreach (ComboBoxItem item in cmb.Items)
+				if (item.Tag?.ToString() == id)
+				{
+					cmb.SelectedItem = item;
+					return;
+				}
+		}
+
+		// Busca en el ComboBox por Content (texto visible)
+		private void SeleccionarEnComboByContent(ComboBox cmb, string texto)
+		{
+			foreach (ComboBoxItem item in cmb.Items)
+				if (item.Content?.ToString() == texto)
+				{
+					cmb.SelectedItem = item;
+					return;
+				}
+		}
+
+		private void BtnGuardar_Click(object sender, RoutedEventArgs e)
+		{
+			string? idMateria = (cmbIDClase.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+			string? idProfesor = (cmbIDProfesor.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+			string? idAula = (cmbIDAula.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+			string tipo = (cmbTipo.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "";
+			string horaInicio = (cmbHoraInicio.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "";
+			string horaFin = (cmbHoraFin.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "";
+
+			if (string.IsNullOrEmpty(idMateria) ||
+				string.IsNullOrEmpty(idProfesor) ||
+				string.IsNullOrEmpty(idAula))
+			{
+				MessageBox.Show("Por favor selecciona todos los campos.", "Campos requeridos",
+					MessageBoxButton.OK, MessageBoxImage.Warning);
+				return;
+			}
+
+			try
+			{
+				if (horarioAEditar != null)
+				{
+					// Actualizar el objeto con los nuevos valores
+					horarioAEditar.IDClase = idMateria;
+					horarioAEditar.Tipo = tipo;
+					horarioAEditar.HoraInicio = horaInicio;
+					horarioAEditar.HoraFin = horaFin;
+					horarioAEditar.IDProfesor = idProfesor;
+					horarioAEditar.IDAula = idAula;
+
+					// DELETE + INSERT con la PK original
+					DatabaseService.Instance.EditarHorario(horarioAEditar, _idClaseOriginal!, idAula);
+				}
+				else
+				{
+					NuevoHorario = new FilaHorario
+					{
+						IDClase = idMateria,
+						Tipo = tipo,
+						HoraInicio = horaInicio,
+						HoraFin = horaFin,
+						IDProfesor = idProfesor,
+						IDAula = idAula
+					};
+
+					DatabaseService.Instance.AgregarHorario(NuevoHorario, idAula);
+				}
+
+				this.DialogResult = true;
+				this.Close();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Error al guardar: {ex.Message}", "Error",
+					MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+	}
 }

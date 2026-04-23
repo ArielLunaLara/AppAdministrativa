@@ -6,71 +6,72 @@ using System.Windows.Media;
 
 namespace AppAdministrativa
 {
-    public partial class Materias : Page
-    {
-        ObservableCollection<Materia> datosMaterias = new();
-        ObservableCollection<Materia> datosFiltrados = new();
+	public partial class Materias : Page
+	{
+		ObservableCollection<Materia> datosMaterias = new();
+		ObservableCollection<Materia> datosFiltrados = new();
 
-        public Materias()
-        {
-            InitializeComponent();
-            CargarDesdeBD();
-        }
+		public Materias()
+		{
+			InitializeComponent();
+			CargarDesdeBD();
+		}
 
-        private void CargarDesdeBD()
-        {
-            datosMaterias = new ObservableCollection<Materia>(
-                DatabaseService.Instance.GetMaterias());
-            datosFiltrados = new ObservableCollection<Materia>(datosMaterias);
-            TablaMaterias.ItemsSource = datosFiltrados;
-        }
-        //  BUSCADOR
-        private void txtBuscar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (txtBuscar.Text == "Buscar Aula...")
-                return;
+		private void CargarDesdeBD()
+		{
+			datosMaterias = new ObservableCollection<Materia>(
+				DatabaseService.Instance.GetMaterias());
+			datosFiltrados = new ObservableCollection<Materia>(datosMaterias);
+			TablaMaterias.ItemsSource = datosFiltrados;
+		}
 
-            string filtro = txtBuscar.Text.ToLower();
+		// BUSCADOR
+		private void txtBuscar_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (txtBuscar.Text == "Buscar Materia...")
+				return;
 
-            var resultado = datosMaterias
-                .Where(v => (v.Nombre != null && v.Nombre.ToLower().Contains(filtro)) ||
-                            (v.Companias != null && v.Companias.ToLower().Contains(filtro)))
-                .ToList();
+			string filtro = txtBuscar.Text.ToLower();
 
-            datosFiltrados.Clear();
+			var resultado = datosMaterias
+				.Where(v => (v.Nombre != null && v.Nombre.ToLower().Contains(filtro)) ||
+							(v.Companias != null && v.Companias.ToLower().Contains(filtro)))
+				.ToList();
 
-            foreach (var item in resultado)
-                datosFiltrados.Add(item);
-        }
+			datosFiltrados.Clear();
 
-        // Placeholder comportamiento
-        private void txtBuscar_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (txtBuscar.Text == "Buscar video...")
-            {
-                txtBuscar.Text = "";
-                txtBuscar.Foreground = Brushes.Black;
-            }
-        }
+			foreach (var item in resultado)
+				datosFiltrados.Add(item);
+		}
 
-        private void txtBuscar_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtBuscar.Text))
-            {
-                txtBuscar.Text = "Buscar video...";
-                txtBuscar.Foreground = Brushes.Gray;
-            }
-        }
+		// Placeholder comportamiento
+		private void txtBuscar_GotFocus(object sender, RoutedEventArgs e)
+		{
+			if (txtBuscar.Text == "Buscar Materia...")
+			{
+				txtBuscar.Text = "";
+				txtBuscar.Foreground = Brushes.Black;
+			}
+		}
 
-        private void BtnAgregar_Click(object sender, RoutedEventArgs e)
-        {
-            AgregarMateriaWindow ventana = new AgregarMateriaWindow();
-            if (ventana.ShowDialog() == true)
-            {
-                DatabaseService.Instance.AgregarMateria(ventana.NuevaMateria);
-                datosMaterias.Add(ventana.NuevaMateria);
-            }
-        }
+		private void txtBuscar_LostFocus(object sender, RoutedEventArgs e)
+		{
+			if (string.IsNullOrWhiteSpace(txtBuscar.Text))
+			{
+				txtBuscar.Text = "Buscar Materia...";
+				txtBuscar.Foreground = Brushes.Gray;
+			}
+		}
+
+		private void BtnAgregar_Click(object sender, RoutedEventArgs e)
+		{
+			AgregarMateriaWindow ventana = new AgregarMateriaWindow();
+			if (ventana.ShowDialog() == true)
+			{
+				DatabaseService.Instance.AgregarMateria(ventana.NuevaMateria);
+				CargarDesdeBD();
+			}
+		}
 
 		private void BtnEditar_Click(object sender, RoutedEventArgs e)
 		{
@@ -80,8 +81,6 @@ namespace AppAdministrativa
 				if (ventana.ShowDialog() == true)
 				{
 					DatabaseService.Instance.EditarMateria(seleccionada);
-
-					// Esto obliga a la UI a mirar los nuevos valores del objeto
 					TablaMaterias.Items.Refresh();
 				}
 			}
@@ -89,29 +88,37 @@ namespace AppAdministrativa
 		}
 
 		private void BtnEliminar_Click(object sender, RoutedEventArgs e)
-        {
-            if (TablaMaterias.SelectedItem is Materia seleccionada)
-            {
-                if (MessageBox.Show("¿Eliminar esta materia?", "Confirmar",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    DatabaseService.Instance.EliminarMateria(seleccionada.ID);
-                    datosMaterias.Remove(seleccionada);
-                }
-            }
-            else MessageBox.Show("Selecciona una materia para eliminar.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+		{
+			if (TablaMaterias.SelectedItem is Materia seleccionada)
+			{
+				if (MessageBox.Show("¿Eliminar esta materia?", "Confirmar",
+					MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+				{
+					bool eliminado = DatabaseService.Instance.EliminarMateria(seleccionada.ID);
+					if (eliminado)
+					{
+						datosMaterias.Remove(seleccionada);
+						datosFiltrados.Remove(seleccionada);
+					}
+					else
+						MessageBox.Show(
+							"No se puede eliminar: tiene clases o proyectos asociados.\nPrimero elimina esos registros.",
+							"Error al eliminar", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+			}
+			else MessageBox.Show("Selecciona una materia para eliminar.", "Aviso",
+				MessageBoxButton.OK, MessageBoxImage.Information);
+		}
 
-        
-        private void Filtro_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e) { if (sender is TextBlock i) i.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#678EC2")); }
-        private void Filtro_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) { if (sender is TextBlock i) i.Background = System.Windows.Media.Brushes.Transparent; }
-    }
+		private void Filtro_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e) { if (sender is TextBlock i) i.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#678EC2")); }
+		private void Filtro_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) { if (sender is TextBlock i) i.Background = System.Windows.Media.Brushes.Transparent; }
+	}
 
-    public class Materia
-    {
-        public string ID { get; set; } = "";
-        public string Nombre { get; set; } = "";
-        public string Companias { get; set; } = "";
-        public string RutaTemario { get; set; } = "";
-    }
+	public class Materia
+	{
+		public string ID { get; set; } = "";
+		public string Nombre { get; set; } = "";
+		public string Companias { get; set; } = "";
+		public string RutaTemario { get; set; } = "";
+	}
 }

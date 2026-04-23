@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AppAdministrativa.AgregarVideo360Window"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Videos 360" Height="320" Width="400"
+        Title="Videos 360" Height="380" Width="400"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F0F4F8">
 
     <Grid>

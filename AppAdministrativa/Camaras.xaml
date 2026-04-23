@@ -21,29 +21,64 @@
                         <Border Background="#8AAADD" CornerRadius="10" Margin="0,0,0,15" Padding="15">
                             <Grid>
                                 <StackPanel>
-                                    <!-- Título: "Cámara del piso N" -->
                                     <TextBlock Text="{Binding Titulo}" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
 
-                                    <TextBlock Text="IP asignada:" FontSize="11" Margin="0,0,0,5"/>
+                                    <TextBlock Text="IPv4:" FontSize="11" Margin="0,0,0,5"/>
 
-                                    <!-- Campo IP -->
+                                    <!-- Campo IPv4 con placeholder -->
                                     <Border Background="White" CornerRadius="6" Height="30" Margin="0,0,0,10">
                                         <Grid>
-                                            <TextBox x:Name="TxtIP" Text="{Binding IP, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBox Text="{Binding IP, UpdateSourceTrigger=PropertyChanged}"
                                                      BorderThickness="0" VerticalContentAlignment="Center"
-                                                     Padding="10,0" Background="Transparent"/>
+                                                     Padding="10,0" Background="Transparent"
+                                                     x:Name="TxtIP"/>
+                                            <!-- Placeholder IPv4 -->
+                                            <TextBlock Text="Ej. 192.168.1.100"
+                                                       VerticalAlignment="Center" Margin="10,0,30,0"
+                                                       Foreground="Gray" FontSize="11"
+                                                       IsHitTestVisible="False">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IP}" Value="">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
                                             <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"
                                                        HorizontalAlignment="Right" VerticalAlignment="Center"
                                                        Margin="0,0,10,0" Foreground="Gray"/>
                                         </Grid>
                                     </Border>
 
-                                    <!-- Campo Ruta de captura -->
+                                    <TextBlock Text="IPv6 / Ruta de captura:" FontSize="11" Margin="0,0,0,5"/>
+
+                                    <!-- Campo IPv6/Ruta con placeholder -->
                                     <Border Background="White" CornerRadius="6" Height="30" Margin="0,0,0,15">
                                         <Grid>
-                                            <TextBox x:Name="TxtRuta" Text="{Binding Ruta, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBox Text="{Binding Ruta, UpdateSourceTrigger=PropertyChanged}"
                                                      BorderThickness="0" VerticalContentAlignment="Center"
-                                                     Padding="10,0" Background="Transparent"/>
+                                                     Padding="10,0" Background="Transparent"
+                                                     x:Name="TxtRuta"/>
+                                            <!-- Placeholder IPv6 -->
+                                            <TextBlock Text="Ej. 2001:db8::1 o rtsp://..."
+                                                       VerticalAlignment="Center" Margin="10,0,30,0"
+                                                       Foreground="Gray" FontSize="11"
+                                                       IsHitTestVisible="False">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Ruta}" Value="">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
                                             <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"
                                                        HorizontalAlignment="Right" VerticalAlignment="Center"
                                                        Margin="0,0,10,0" Foreground="Gray"/>
@@ -62,7 +97,7 @@
                                     </Button>
                                 </StackPanel>
 
-                                <!-- Botón estado conexión (esquina superior derecha) -->
+                                <!-- Botón estado conexión -->
                                 <Button Content="{Binding TextoBotonConexion}" Tag="{Binding}"
                                         Click="BtnToggleConexion_Click"
                                         HorizontalAlignment="Right" VerticalAlignment="Top"

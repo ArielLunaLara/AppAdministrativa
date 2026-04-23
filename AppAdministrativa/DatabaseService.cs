@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 
 namespace AppAdministrativa
 {
@@ -50,18 +51,35 @@ namespace AppAdministrativa
             return lista;
         }
 
-        public void AgregarSalon(FilaAula a)
-        {
-            if (!IsAvailable) return;
-            using var conn = GetConnection(); conn.Open();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO Classroom (classroom_name, floor_num) VALUES ($n,$p)";
-            cmd.Parameters.AddWithValue("$n", a.Nombre);
-            cmd.Parameters.AddWithValue("$p", string.IsNullOrEmpty(a.Piso) ? DBNull.Value : int.Parse(a.Piso));
-            cmd.ExecuteNonQuery();
-        }
+		public void AgregarSalon(FilaAula a)
+		{
+			if (!IsAvailable) return;
+			using var conn = GetConnection(); conn.Open();
+			using var transaction = conn.BeginTransaction();
+			try
+			{
+				var cmd = conn.CreateCommand();
+				cmd.CommandText = "INSERT INTO Classroom (classroom_name, floor_num) VALUES ($n,$p)";
+				cmd.Parameters.AddWithValue("$n", a.Nombre);
+				cmd.Parameters.AddWithValue("$p", string.IsNullOrEmpty(a.Piso) ? DBNull.Value : int.Parse(a.Piso));
+				cmd.ExecuteNonQuery();
 
-        public void EditarSalon(FilaAula a, string nombreOriginal)
+				// Insertar registro vacío en Video360 para que aparezca en esa pestaña
+				var cmd2 = conn.CreateCommand();
+				cmd2.CommandText = "INSERT OR IGNORE INTO Video360 (id_classroom, ruta_video360) VALUES ($n, NULL)";
+				cmd2.Parameters.AddWithValue("$n", a.Nombre);
+				cmd2.ExecuteNonQuery();
+
+				transaction.Commit();
+			}
+			catch
+			{
+				transaction.Rollback();
+				throw;
+			}
+		}
+
+		public void EditarSalon(FilaAula a, string nombreOriginal)
         {
             if (!IsAvailable) return;
             using var conn = GetConnection(); conn.Open();
@@ -88,20 +106,39 @@ namespace AppAdministrativa
             }
         }
 
-        public void EliminarSalon(string nombre)
-        {
-            if (!IsAvailable) return;
-            using var conn = GetConnection(); conn.Open();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = "DELETE FROM Classroom WHERE classroom_name=$n";
-            cmd.Parameters.AddWithValue("$n", nombre);
-            cmd.ExecuteNonQuery();
-        }
+		public bool EliminarSalon(string nombre)
+		{
+			if (!IsAvailable) return false;
+			try
+			{
+				using var conn = GetConnection(); conn.Open();
+				using var transaction = conn.BeginTransaction();
 
-        // ══════════════════════════════════════════════════════════════════════
-        // PROFESORES / TEACHERS
-        // ══════════════════════════════════════════════════════════════════════
-        public List<Profesor> GetProfesores()
+				// 1. Eliminar primero el registro de Video360 (FK)
+				var cmd1 = conn.CreateCommand();
+				cmd1.CommandText = "DELETE FROM Video360 WHERE id_classroom=$n";
+				cmd1.Parameters.AddWithValue("$n", nombre);
+				cmd1.ExecuteNonQuery();
+
+				// 2. Eliminar el aula
+				var cmd2 = conn.CreateCommand();
+				cmd2.CommandText = "DELETE FROM Classroom WHERE classroom_name=$n";
+				cmd2.Parameters.AddWithValue("$n", nombre);
+				cmd2.ExecuteNonQuery();
+
+				transaction.Commit();
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		// ══════════════════════════════════════════════════════════════════════
+		// PROFESORES / TEACHERS
+		// ══════════════════════════════════════════════════════════════════════
+		public List<Profesor> GetProfesores()
         {
             var lista = new List<Profesor>();
             if (!IsAvailable) return lista;
@@ -230,20 +267,39 @@ namespace AppAdministrativa
 
         }
 
-        public void EliminarMateria(string id)
-        {
-            if (!IsAvailable) return;
-            using var conn = GetConnection(); conn.Open();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = "DELETE FROM Course WHERE id_course=$id";
-            cmd.Parameters.AddWithValue("$id", int.Parse(id));
-            cmd.ExecuteNonQuery();
-        }
+		public bool EliminarMateria(string id)
+		{
+			if (!IsAvailable) return false;
+			if (!int.TryParse(id, out int idInt)) return false; // protege contra ID vacío
+			try
+			{
+				using var conn = GetConnection(); conn.Open();
 
-        // ══════════════════════════════════════════════════════════════════════
-        // HORARIOS / CLASES
-        // ══════════════════════════════════════════════════════════════════════
-        public List<FilaHorario> GetHorarios()
+				var chk1 = conn.CreateCommand();
+				chk1.CommandText = "SELECT COUNT(*) FROM Class WHERE id_course=$id";
+				chk1.Parameters.AddWithValue("$id", idInt);
+				int clases = Convert.ToInt32(chk1.ExecuteScalar());
+
+				var chk2 = conn.CreateCommand();
+				chk2.CommandText = "SELECT COUNT(*) FROM Project WHERE id_course=$id";
+				chk2.Parameters.AddWithValue("$id", idInt);
+				int proyectos = Convert.ToInt32(chk2.ExecuteScalar());
+
+				if (clases > 0 || proyectos > 0) return false;
+
+				var cmd = conn.CreateCommand();
+				cmd.CommandText = "DELETE FROM Course WHERE id_course=$id";
+				cmd.Parameters.AddWithValue("$id", idInt);
+				cmd.ExecuteNonQuery();
+				return true;
+			}
+			catch { return false; }
+		}
+
+		// ══════════════════════════════════════════════════════════════════════
+		// HORARIOS / CLASES
+		// ══════════════════════════════════════════════════════════════════════
+		public List<FilaHorario> GetHorarios()
         {
             var lista = new List<FilaHorario>();
             if (!IsAvailable) return lista;
@@ -286,25 +342,47 @@ namespace AppAdministrativa
             cmd.ExecuteNonQuery();
         }
 
-        public void EditarHorario(FilaHorario h, string classroomName)
-        {
-            if (!IsAvailable) return;
-            using var conn = GetConnection(); conn.Open();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = @"UPDATE Class SET
-                id_classroom=$cl, id_teacher=$t, schedule_type=$tp,
-                class_start_time=$hi, class_finish_time=$hf
-                WHERE id_class=$id";
-            cmd.Parameters.AddWithValue("$id", h.IDClase);
-            cmd.Parameters.AddWithValue("$cl", classroomName);
-            cmd.Parameters.AddWithValue("$t", int.Parse(h.IDProfesor));
-            cmd.Parameters.AddWithValue("$tp", h.Tipo);
-            cmd.Parameters.AddWithValue("$hi", int.Parse(h.HoraInicio.Replace(":00", "")));
-            cmd.Parameters.AddWithValue("$hf", int.Parse(h.HoraFin.Replace(":00", "")));
-            cmd.ExecuteNonQuery();
-        }
+		public void EditarHorario(FilaHorario h, string idClaseOriginal, string classroomName)
+		{
+			if (!IsAvailable) return;
+			if (!int.TryParse(h.IDClase.Length >= 4 ? h.IDClase[..4] : h.IDClase, out int idCourse)) return;
+			if (!int.TryParse(h.IDProfesor, out int idTeacher)) return;
 
-        public void EliminarHorario(string idClase)
+			using var conn = GetConnection(); conn.Open();
+			using var transaction = conn.BeginTransaction();
+			try
+			{
+				// 1. Eliminar el registro original por su PK original
+				var cmdDel = conn.CreateCommand();
+				cmdDel.CommandText = "DELETE FROM Class WHERE id_class=$id";
+				cmdDel.Parameters.AddWithValue("$id", idClaseOriginal);
+				cmdDel.ExecuteNonQuery();
+
+				// 2. Insertar con los nuevos valores (incluyendo posible nuevo IDClase)
+				var cmdIns = conn.CreateCommand();
+				cmdIns.CommandText = @"INSERT INTO Class
+            (id_class, id_classroom, id_course, id_teacher,
+             schedule_type, class_start_time, class_finish_time)
+            VALUES ($id, $cl, $co, $t, $tp, $hi, $hf)";
+				cmdIns.Parameters.AddWithValue("$id", h.IDClase);
+				cmdIns.Parameters.AddWithValue("$cl", classroomName);
+				cmdIns.Parameters.AddWithValue("$co", idCourse);
+				cmdIns.Parameters.AddWithValue("$t", idTeacher);
+				cmdIns.Parameters.AddWithValue("$tp", h.Tipo);
+				cmdIns.Parameters.AddWithValue("$hi", int.Parse(h.HoraInicio.Replace(":00", "")));
+				cmdIns.Parameters.AddWithValue("$hf", int.Parse(h.HoraFin.Replace(":00", "")));
+				cmdIns.ExecuteNonQuery();
+
+				transaction.Commit();
+			}
+			catch
+			{
+				transaction.Rollback();
+				throw; // Lo relanzamos para que el CS lo muestre
+			}
+		}
+
+		public void EliminarHorario(string idClase)
         {
             if (!IsAvailable) return;
             using var conn = GetConnection(); conn.Open();
@@ -351,7 +429,47 @@ namespace AppAdministrativa
             return lista;
         }
 
-        public void AgregarProyecto(ProyectoItem p)
+		// Devuelve pares id+nombre de profesores para el ComboBox de Horarios
+		public List<(string Id, string Nombre)> GetProfesoresParaCombo()
+		{
+			var lista = new List<(string, string)>();
+			if (!IsAvailable) return lista;
+			using var conn = GetConnection(); conn.Open();
+			var cmd = conn.CreateCommand();
+			cmd.CommandText = "SELECT id_teacher, teacher_name FROM Teacher ORDER BY teacher_name";
+			using var r = cmd.ExecuteReader();
+			while (r.Read())
+				lista.Add((r.GetInt32(0).ToString(), r.IsDBNull(1) ? "" : r.GetString(1)));
+			return lista;
+		}
+
+		// Devuelve pares id+nombre de materias para el ComboBox de Horarios
+		public List<(string Id, string Nombre)> GetMateriasParaCombo()
+		{
+			var lista = new List<(string, string)>();
+			if (!IsAvailable) return lista;
+			using var conn = GetConnection(); conn.Open();
+			var cmd = conn.CreateCommand();
+			cmd.CommandText = "SELECT id_course, course_name FROM Course ORDER BY course_name";
+			using var r = cmd.ExecuteReader();
+			while (r.Read())
+				lista.Add((r.GetInt32(0).ToString(), r.IsDBNull(1) ? "" : r.GetString(1)));
+			return lista;
+		}
+
+		public List<string> GetNombresAulas()
+		{
+			var lista = new List<string>();
+			if (!IsAvailable) return lista;
+			using var conn = GetConnection(); conn.Open();
+			var cmd = conn.CreateCommand();
+			cmd.CommandText = "SELECT classroom_name FROM Classroom ORDER BY classroom_name";
+			using var r = cmd.ExecuteReader();
+			while (r.Read()) lista.Add(r.GetString(0));
+			return lista;
+		}
+
+		public void AgregarProyecto(ProyectoItem p)
         {
             if (!IsAvailable) return;
             using var conn = GetConnection(); conn.Open();

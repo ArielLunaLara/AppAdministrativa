@@ -78,8 +78,7 @@ namespace AppAdministrativa
 			if (ventana.ShowDialog() == true)
 			{
 				DatabaseService.Instance.AgregarUsuario(ventana.NuevoUsuario);
-				datosUsuarios.Add(ventana.NuevoUsuario);
-				ActualizarTablaVisual();
+				CargarDesdeBD(); // ← recarga con ID real desde BD
 			}
 		}
 
@@ -104,15 +103,33 @@ namespace AppAdministrativa
 			{
 				if (seleccionado.NombreUsuario == SesionActual.Usuario)
 				{
-					MessageBox.Show("No puedes eliminar tu propia cuenta activa.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+					MessageBox.Show("No puedes eliminar tu propia cuenta activa.", "Aviso",
+						MessageBoxButton.OK, MessageBoxImage.Warning);
 					return;
 				}
 
-				if (MessageBox.Show($"¿Eliminar al usuario '{seleccionado.NombreUsuario}'?", "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+				if (MessageBox.Show($"¿Eliminar al usuario '{seleccionado.NombreUsuario}'?",
+					"Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
 				{
-					DatabaseService.Instance.EliminarUsuario(seleccionado.ID);
-					datosUsuarios.Remove(seleccionado);
-					ActualizarTablaVisual();
+					// Verificar que el ID sea válido antes de intentar eliminar
+					if (string.IsNullOrEmpty(seleccionado.ID))
+					{
+						MessageBox.Show("No se puede eliminar: ID de usuario inválido.",
+							"Error", MessageBoxButton.OK, MessageBoxImage.Error);
+						return;
+					}
+
+					try
+					{
+						DatabaseService.Instance.EliminarUsuario(seleccionado.ID);
+						datosUsuarios.Remove(seleccionado);
+						ActualizarTablaVisual();
+					}
+					catch
+					{
+						MessageBox.Show("No se pudo eliminar el usuario.",
+							"Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					}
 				}
 			}
 			else MessageBox.Show("Selecciona un usuario para eliminar.", "Aviso");

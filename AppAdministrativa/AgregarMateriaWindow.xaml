@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Agregar Materia" Height="600" Width="400" 
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F0F4F8">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -23,25 +22,42 @@
 
             <TextBlock Text="ID" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
             <Border Background="#C9D9F0" CornerRadius="6" Height="35" Width="100" HorizontalAlignment="Left" Margin="0,0,0,20">
-                <TextBox x:Name="txtID" Text="#000" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0" Foreground="#4A4A4A"/>
+                <TextBox x:Name="txtID"
+                         Text="#000" Foreground="Gray"
+                         GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                         Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0"/>
             </Border>
 
             <TextBlock Text="Nombre" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
             <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,20">
-                <TextBox x:Name="txtNombre" Text="Escribir Nombre de la Materia" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0" Foreground="#4A4A4A"/>
+                <TextBox x:Name="txtNombre"
+                         Text="Escribir Nombre de la Materia" Foreground="Gray"
+                         GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                         Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0"/>
             </Border>
 
             <TextBlock Text="Compañías" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
             <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,20">
-                <TextBox x:Name="txtCompanias" Text="Escribir Nombre de las Compañías Relacionadas" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0" Foreground="#4A4A4A"/>
+                <TextBox x:Name="txtCompanias"
+                         Text="Escribir Nombre de las Compañías Relacionadas" Foreground="Gray"
+                         GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                         Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0"/>
             </Border>
 
             <TextBlock Text="Ruta Temario" FontSize="11" Foreground="#1A2530" Margin="0,0,0,5"/>
             <Border Background="#C9D9F0" CornerRadius="6" Height="35" Margin="0,0,0,40">
-                <TextBox x:Name="txtRutaTemario" Text="Escribir Ruta del Temario" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0" Foreground="#4A4A4A"/>
+                <TextBox x:Name="txtRutaTemario"
+                         Text="Escribir Ruta del Temario" Foreground="Gray"
+                         GotFocus="RemovePlaceholder" LostFocus="AddPlaceholder"
+                         Background="Transparent" BorderThickness="0"
+                         VerticalContentAlignment="Center" Padding="10,0"/>
             </Border>
 
-            <Button Click="BtnGuardar_Click" Width="120" Height="40" BorderThickness="0" Foreground="#1A2530" FontWeight="SemiBold" HorizontalAlignment="Center" Cursor="Hand">
+            <Button Click="BtnGuardar_Click" Width="120" Height="40" BorderThickness="0"
+                    Foreground="#1A2530" FontWeight="SemiBold" HorizontalAlignment="Center" Cursor="Hand">
                 <Button.Background>
                     <SolidColorBrush Color="#678EC2"/>
                 </Button.Background>

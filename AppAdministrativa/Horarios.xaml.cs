@@ -68,26 +68,24 @@ namespace AppAdministrativa
 		}
 
 		private void BtnAgregar_Click(object sender, RoutedEventArgs e)
-        {
-            AgregarHorarioWindow ventana = new AgregarHorarioWindow();
-            if (ventana.ShowDialog() == true)
-            {
-                datosHorarios.Add(ventana.NuevoHorario);
-            }
-        }
+		{
+			AgregarHorarioWindow ventana = new AgregarHorarioWindow();
+			if (ventana.ShowDialog() == true)
+				CargarDesdeBD();
+		}
 
-        private void BtnEditar_Click(object sender, RoutedEventArgs e)
-        {
-            if (TablaHorarios.SelectedItem is FilaHorario seleccionado)
-            {
-                AgregarHorarioWindow ventana = new AgregarHorarioWindow(seleccionado);
-                if (ventana.ShowDialog() == true)
-                    TablaHorarios.Items.Refresh();
-            }
-            else MessageBox.Show("Selecciona un horario para editar.");
-        }
+		private void BtnEditar_Click(object sender, RoutedEventArgs e)
+		{
+			if (TablaHorarios.SelectedItem is FilaHorario seleccionado)
+			{
+				AgregarHorarioWindow ventana = new AgregarHorarioWindow(seleccionado);
+				if (ventana.ShowDialog() == true)
+					CargarDesdeBD();
+			}
+			else MessageBox.Show("Selecciona un horario para editar.");
+		}
 
-        private void BtnEliminar_Click(object sender, RoutedEventArgs e)
+		private void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             if (TablaHorarios.SelectedItem is FilaHorario seleccionado)
             {

@@ -104,16 +104,21 @@ namespace AppAdministrativa
 		{
 			if (TablaAulas.SelectedItem is FilaAula aulaSeleccionada)
 			{
-				if (MessageBox.Show($"¿Eliminar '{aulaSeleccionada.Nombre}'?", "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+				if (MessageBox.Show($"¿Eliminar '{aulaSeleccionada.Nombre}'?", "Confirmar",
+					MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 				{
-					DatabaseService.Instance.EliminarSalon(aulaSeleccionada.Nombre);
-
-					// Eliminamos de la fuente principal
-					datosAulas.Remove(aulaSeleccionada);
-
-					ActualizarTablaVisual();
+					bool eliminado = DatabaseService.Instance.EliminarSalon(aulaSeleccionada.Nombre);
+					if (eliminado)
+					{
+						datosAulas.Remove(aulaSeleccionada);
+						ActualizarTablaVisual();
+					}
+					else
+						MessageBox.Show("No se pudo eliminar el aula.",
+							"Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}
+			else MessageBox.Show("Selecciona un aula para eliminar.", "Aviso");
 		}
 
 		// Método de actualización optimizado
